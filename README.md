@@ -3,6 +3,9 @@
 Cette application a été créée par des étudiants du Master 2 Géographie Numérique de l’Université Lyon 2 et du Master 2 SENTINELLES de l’Université Lyon 3, dans le cadre d’un projet professionnel. Cette application s’inscrit dans le cadre d’une commande portée par les services Erasme et Données Métropolitaines de la Métropole de Lyon, à destination des étudiants des Masters Géonum et Sentinelles.
 ![Erasme Logo](public/img/interface.png)
 
+## Lien de l'application en live
+[Lien Demo](https://batiscan.onrender.com/)
+
 ## Commanditaires :
 - [Métropole de Lyon](https://www.grandlyon.com/)
 - [Erasme](https://erasme.org/-Accueil-331-)
