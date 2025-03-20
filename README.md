@@ -42,7 +42,7 @@ Pour installer ce projet, suivez ces étapes :
 1. Clonez ce repository :
 
 ```bash
-git clone https://votre-lien-du-repository.git
+git clone https://github.com/MasterGeonum/2025_BatiSCAN.git
 ```
 2. Allez dans le répertoire du projet :
 ```bash 
