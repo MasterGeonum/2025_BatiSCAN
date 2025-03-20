@@ -49,7 +49,7 @@ git clone https://github.com/MasterGeonum/2025_BatiSCAN.git
 ```
 2. Allez dans le répertoire du projet :
 ```bash 
-cd BatiSCAN
+cd 2025_BatiSCAN
 ```
 3. Installez les dépendances nécessaires :
 ```bash 
