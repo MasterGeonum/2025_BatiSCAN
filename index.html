@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+
+  <title>BatiSCAN</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-side-by-side/leaflet-side-by-side.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-measure@3.1.0/dist/leaflet-measure.min.css">
+  <link rel="stylesheet" href="src/style.css" />
+
+
+</head>
+<body>
+  <div id="navbar">
+    <img src="/img/logo_metlyon.png" alt="Logo Métropole de Lyon" id="logoMetLyon">
+    <div id="navbar-left">
+      <button id="navbar-content_content" class="navbar-button active">BatiSCAN </button>
+      <button id="navbar-methodologie_content" class="navbar-button">Methodologie </button>
+      <button id="navbar-info_content" class="navbar-button">Info </button>
+      <button id="navbar-aide_content" class="navbar-button">Aides </button>
+    </div>
+    <img src="/img/Logo_batiscan.png" alt="Logo Batiscan" id="logo">
+  </div>
+
+
+
+  <div id="rowContent">
+    <div id="content_content" class="rowContentItem">
+      <div id="navbarbutton-container">
+        <!-- Nouveau Bandeau 1 -->
+        <div id="bandeauAnnee_left" class="bandeau">
+          <button class="btn active">2012</button>
+          <button class="btn">2015</button>
+          <button class="btn">2018</button>
+          <button class="btn">2022</button>
+        </div>
+        <!-- Nouveau Bandeau 2 -->
+        <div id="bandeauAnnee_right"  class="bandeau">
+          <button class="btn">2012</button>
+          <button class="btn">2015</button>
+          <button class="btn">2018</button>
+          <button class="btn active">2022</button>
+        </div>
+      </div>
+      <div id="map">
+        <div id="sidepanel">
+          <button class="sidebar-btn" id="btn-couches">
+            <img src="/img/couche.png" alt="Couches"> Couches
+          </button>
+          <button class="sidebar-btn" id="btn-graph">
+              <img src="/img/graphique.png" alt="Graphiques"> Graphiques
+          </button>
+          <button class="sidebar-btn" id="btn-arbre">
+              <img src="/img/arbre.png" alt="arbre"> Végétation
+          </button>
+          <button class="sidebar-btn" id="btn-batiment">
+              <img src="/img/batiment.png" alt="batiment"> Batiments
+          </button>
+          <button class="sidebar-btn" id="btn-mode">
+            <img src="/img/control.png" alt="control"> Affichage
+          </button>
+
+
+      </div>
+
+      <div id="info_popup" class="Item hidden">
+        <h3>Bienvenue sur l'application BatiSCAN</h3>
+        <p>
+          Cette application permet la comparaison deux à deux d’orthophotographie sur plusieurs années afin d’observer l’évolution du quartier de la Part-Dieu. L’application permet d'apporter un éclairage nouveau sur les mutations en cours au sein du quartier de la Part-Dieu. Actuellement, une dalle d’un kilomètre carré peut être analysée avec le type de bâtiment ou les espaces verts. 
+        </p>
+        <button id="close_popup">Fermer</button>
+
+        
+
+
+
+
+      </div>
+      
+      <div id="sidepanelContent">
+          <div id="graph" class="contentItem">
+            <div class="Item">
+              <h3>Gestion des graphes</h3>
+              <div class="chart-icons">
+                <img src="\img\icons8-bar-chart-50.png" class="chart-icon" data-chart-type="bar" alt="Bar Chart">
+                <!-- <img src="line-chart-icon.png" class="chart-icon" data-chart-type="line" alt="Line Chart">
+                <img src="pie-chart-icon.png" class="chart-icon" data-chart-type="pie" alt="Pie Chart"> -->
+                <img src="\img\icons8-pie-chart-50.png" class="chart-icon" data-chart-type="doughnut" alt="Doughnut Chart">
+                </div>
+            </div>
+
+
+
+            <div id="graphContainer">
+            <h3 id="graphTitle" class="graphTitle">Surfaces des années sélectionnées</h3>
+            <canvas id="comparaisonGraph"></canvas> <!-- Graphique sélectionné -->
+
+            <h3 id="globalGraphTitle" class="graphTitle">Surfaces Totales des années</h3>
+
+            <canvas id="globalComparaisonGraph"></canvas> <!-- Graphique global -->
+            </div>
+          </div>
+          <div id="couches" class="contentItem">
+            <br>
+            <label id="toggleSliderLabel">
+              <input type="checkbox" checked class="Item" id="toggleSlider" value="Desactiver le slider"> Activer la comparaison
+            </label>
+            <div id="twoMaps" class="Item">
+              <h3>Gestion des couches</h3>
+              <label for="">Gauche</label>
+              <select name="" id="type_left">
+                <option value="image">Images Satellites</option>
+                <option value="bati">Bâtiments(Part-Dieu)</option>
+                <option value="vegetation">Vegétation(Part-Dieu)</option>
+              </select> <br>
+              <label for="">Droite</label>
+              <select name="" id="type_right">
+                <option value="image">Images Satellites</option>
+                <option value="bati">Bâtiments(Part-Dieu)</option>
+                <option value="vegetation">Vegétation(Part-Dieu)</option>
+              </select>
+            </div>
+
+            <div id="oneMap" style="display: none;">
+              <div class="Item">
+                <h3>Gestion des couches</h3>
+                <ul id="listLayer">
+                  
+                </ul>
+            </div>
+              <div class="Item" >
+                <h3>Ajouter une couche</h3>
+                <select name="" id="type_layer_center">
+                  <option value="image">Images Satellites</option>
+                  <option value="bati">Bâtiments(Part-Dieu)</option>
+                  <option value="vegetation">Vegétation(Part-Dieu)</option>
+                </select> <br> 
+                <label for="">Choisir l'année</label>
+                <select name="" id="oneMap_year">
+                  <option value="2012">2012</option>
+                  <option value="2015">2015</option>
+                  <option value="2018">2018</option>
+                  <option value="2022">2022</option>
+                </select> <br> <br>
+                <div>
+                  <button id="addLayer-center" >Ajouter la couche</button>
+                </div>
+              </div>
+
+
+          </div> 
+
+          <div class="Item">
+            <h3>Données DataLyon (Sans année)</h3>
+            <label for="">Selectionner la couche</label>
+            <select name="" id="dataLyon">
+
+            </select> 
+            <label for="">Ajouter</label>
+            <div id="addSideLayersFromLyon">
+              <button id="addLayer-left" >A Gauche</button>
+              <button id="addLayer-right">A Droite</button>
+            </div>
+            <div>
+              <button id="addLayerCenterLayersFromLyon" style="display: none;">Ajouter la couche</button>
+            </div>
+        </div>
+
+        <div class="Item">
+          <h3>Fonds de cartes (Sans année)</h3>
+          <select name="" id="Fonds">
+            <option value="cartodb">CartDB</option>
+            <option value="OpenStreetMap">OpenStreetMap</option>
+            <option value="HOTOSM">HotOSM</option>
+          </select> 
+      </div>
+
+          </div>
+          <div id="mode" class="contentItem" >
+            <div id="btn-side-by-side" class="Item">
+              <h3>Slider</h3>
+              <img src="/img/sidebyside.png" alt="control"> 
+            </div>
+
+            <div class="Item">
+              <h3>Loupe</h3>
+              <img id="btn-loupe" src="/img/loop.png" alt="control"> 
+              <p>Extérieur => Couche de gauche</p>
+              <p>Intérieur => Couche de droite</p>
+
+            </div>
+
+            <div id="btn-synchro" class="Item">
+              <h3>Carte synchrone</h3>
+              <img src="/img/synchrone.png" alt="control"> 
+            </div>
+            
+          </div>
+      </div>
+      </div>
+      <div id="separator">
+
+      </div>
+      <div id="map2">
+
+      </div>
+
+  </div>
+  <div id="methodologie_content" class="rowContentItem">
+    <h4>Methodologie</h4>
+    <div id="divMethodology" >
+      <div id="divfirstMethodology">
+          <div id="textMethodology" class="itemeMethodology">
+            <div>
+              <p>
+                Cette étude repose sur l’expérimentation de plusieurs approches basées sur des modèles de Deep Learning et des outils SIG, combinant des solutions propriétaires et open-source afin d’évaluer leur efficacité et leur pertinence dans un contexte de suivi de l’évolution urbaine. Trois méthodes principales ont été testées :
+              </p>
+              <ul>
+                <li>
+                  <strong>U-Net avec ArcGIS Pro</strong>, en utilisant les outils de segmentation d’images et d’apprentissage profond intégrés à l’environnement ESRI. Cette approche permet d’entraîner un modèle sur des données spécifiques et d’obtenir une classification des bâtiments adaptée au territoire d’étude.
+                </li>
+                <li>
+                  <strong>Segment Anything Model (SAM)</strong>, un modèle avancé de segmentation développé par Meta, capable d’extraire des objets sans entraînement préalable. Cette méthode repose sur un découpage en patches et l’utilisation de prompts pour isoler les bâtiments dans les images aériennes.
+                </li>
+                <li>
+                  <strong>Mapflow</strong>, une solution commerciale reposant sur des modèles pré-entraînés permettant une détection automatique des bâtiments à partir d’imageries satellites et aériennes. Cette approche clé en main permet un traitement rapide sur de vastes zones.
+                </li>
+              </ul>
+            </div>
+
+            <div id="graphMethodology">
+              <!-- Dropdown for selecting comparison metric -->
+              <select id="metricSelector">
+                <option value="IoU">IoU</option>
+                <option value="Taux de couverture">Taux de couverture</option>
+                <option value="Sur-detcteion">Sur-détection</option>
+                <option value="Sous-detection">Sous-detection</option>
+              </select>
+              
+              <!-- Canvas for Chart.js -->
+              <canvas id="comparisonChart" width="40" height="30"></canvas>
+            </div>
+            
+            
+          </div>
+          <div id="mapMethodology" class="itemeMethodology">
+            <div id="navbarMethodology">
+              <select name="" id="approach-left">
+                <option value="mapflow" selected>Mapflow</option>
+                <option value="sam">SAM</option>
+                <option value="arcgis">U-net ArcGIS</option>
+                <option value="reference">Référence manuelle</option>
+                <option value="bdtopo">BdTopo</option>
+              </select>
+              <select name="" id="approach-right">
+                <option value="mapflow">Mapflow</option>
+                <option value="sam" selected>SAM</option>
+                <option value="arcgis">U-net ArcGIS</option>
+                <option value="reference">Référence manuelle</option>
+                <option value="bdtopo">BdTopo</option>
+              </select>
+            </div>
+          </div>
+      </div>
+     
+
+      <div id="text2_methodology" class="itemeMethodology">
+        <div>
+          <p>
+            L’expérimentation a été réalisée sur une dalle de 1 km² située dans le quartier de la Part-Dieu à Lyon. Ce choix s’explique par la forte dynamique urbaine de cette zone. Les données utilisées proviennent des orthophotographies de 2012, 2015, 2020 et 2022 (téléchargées depuis le site DataLyon), fournissant une couverture multi-temporelle permettant d’analyser les performances des modèles face aux évolutions du bâti.
+          </p>
+          <p>
+            Les graphiques ci-dessus permettent de comparer l’efficacité et la pertinence de chacune des solutions, suivant 4 indicateurs :
+          </p>
+          <ul>
+            <li>
+              <strong>IoU (Intersection over Union)</strong> est un indicateur mesurant le chevauchement entre les empreintes détectées et les empreintes de référence, plus la valeur est élevée, plus la détection est précise.
+            </li>
+            <li>
+              <strong>Le taux de couverture</strong> représente le pourcentage de bâtiments réels correctement identifiés par l’algorithme.
+            </li>
+            <li>
+              <strong>La sur-détection</strong> correspond à la détection erronée d’éléments qui ne sont pas des bâtiments (faux positifs).
+            </li>
+            <li>
+              <strong>La sous-détection</strong> représente l’omission de certains bâtiments réels dans l’identification (faux négatifs).
+            </li>
+          </ul>
+          <p>
+            <strong>Solution adoptée :</strong> Mapflow est la solution la plus fiable et la plus pratique. Son taux de couverture élevé, sa faible sur-détection et son temps de traitement rapide en font un excellent choix pour une utilisation immédiate sans corrections majeures. Sa compatibilité cloud élimine le besoin d’une machine puissante et son interface graphique la rend accessible même aux non-experts.
+          </p><br>
+  
+          <div style="margin-bottom: 30px; font-size: 22px;" >
+            Pour toute autre question, contactez <a href="https://mastergeonum.org/" target="_blank" ><strong>mastergeonum.org</strong></a>.
+          </div>
+        </div>
+
+
+      </div>
+
+    </div>
+  </div>
+  <div id="info_content" class="rowContentItem">
+    <h4>Infos</h4>
+
+    <p>Cette application a été créée par des étudiants du Master 2 Géographie Numérique de l’Université Lyon 2 et du Master 2 SENTINELLES de l’Université Lyon 3, dans le cadre d’un projet professionnel. Cette application s’inscrit dans le cadre d’une commande portée par les services Erasme et Données Métropolitaines de la Métropole de Lyon, à destination des étudiants des Masters Géonum et Sentinelles.</p>
+    
+    <p>Elle vise à analyser l'évolution du bâti à travers une étude comparative des orthophotographies. Cette démarche permettra à nos commanditaires d'identifier des patterns et des anomalies dans les évolutions des bâtiments afin de prendre des décisions plus adaptées aux enjeux d'aménagement urbain. Le premier objectif a été d'extraire les bâtiments à partir des images satellitaires.</p>
+    
+    <p>Dans un second temps, l’application devait permettre une comparaison deux à deux d'orthophotographies sur plusieurs années afin d'observer l’évolution du quartier. Cette application est également complétée par des fonctionnalités cartographiques traditionnelles.</p>
+    
+    <p>Pour les commanditaires, les diverses méthodes pouvant être utilisées afin d’effectuer une comparaison d’orthophotographies et la vectorisation des bâtiments à partir de n’importe quelle orthophotographie leur permettent de découvrir une grande quantité de techniques qu’ils pourront ensuite utiliser dans le cadre d’autres projets.</p>
+    
+
+    <div id="info2">
+      <div id="equipe">
+        <h4>Commanditaires :</h4>
+        <ul>
+          <li><a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></li>
+          <li><a href="https://erasme.org/-Accueil-331-" target="_blank">Erasme</a></li>
+        </ul>
+        
+        <h4>Prestataire :</h4>
+        <ul>
+          <li><a href="https://mastergeonum.org/" target="_blank">Master Géonum</a></li>
+          <li><a href="https://facdeshumanites.univ-lyon3.fr/master-sante-environnement-informations-spatio-temporelles-sentinelles" target="_blank">Master Sentinelles</a></li>
+        </ul>
+        
+        <h4>Équipe :</h4>
+        <ul>
+          <li><a href="https://www.linkedin.com/in/benirina-parfait-rafamatanantsoa-1a2653270/" target="_blank">Benirina Parfait RAFAMATANANTSOA</a></li>
+          <li><a href="https://www.linkedin.com/in/camille-roche-autin-302868b2/" target="_blank">Camille Roche-Autin</a></li>
+          <li><a href="https://www.linkedin.com/in/corentin-quesnel-873b8b332/" target="_blank">Corentin Quesnel</a></li>
+          <li><a href="https://www.linkedin.com/in/jules-chasson-1232a6194/" target="_blank">Jules Chasson</a></li>
+          <li><a href="https://www.linkedin.com/in/paul-g-047b971b1/" target="_blank">Paul Goullencourt</a></li>
+        </ul>
+        
+        <p>Pour toute autre question, contactez <a href="https://mastergeonum.org/" target="_blank">Master Géonum</a>.</p>
+        
+      </div>
+  
+      <div id="logo_info" >
+        <img src="/img/geonum.png" alt="">
+        <img src="/img/sentinelles.png" alt="">
+        <img src="/img/logo_metlyon.png" alt="">
+        <img src="/img/erasme.jpg" alt="">
+      </div>
+    </div>
+
+
+
+
+  </div>
+  <div id="aide_content" class="rowContentItem">
+    <h4>Aides</h4>
+    <div class="aideContainer">
+      <div class="aide_content">
+        <div class="aide_content2">
+          <img src="/img/aides/couches.png" alt="">
+          <div>
+            <p class="aide_title">Couches</p>
+          <p>
+            Lorsqu’on clique sur "Couche", un popup s’affiche pour permettre la gestion des couches. Il est possible de désactiver la comparaison afin d’arrêter la comparaison deux à deux. Vous pouvez sélectionner les couches que vous souhaitez afficher à droite ou à gauche. Deux types de couches sont proposés : les couches de végétation et celles des bâtiments, extraites grâce à la méthode Mapflow.
+          </p>
+            <p style="margin-top:150px;">Il est également possible d’ajouter des couches proposées par la métropole de Lyon vous avez la possibilité de les visionner à droite ou gauche. 
+            </p>
+              <p style="margin-top: 150px;"> Enfin, vous avez la possibilité de modifier le fond de carte.
+            </p>
+          </div>
+        </div>
+        <div class="aide_content2">
+          <img src="/img/aides/graphes.png" alt="">
+
+          <div>
+            <p class="aide_title">Graphiques</p>
+            <p> 
+              Les graphiques s'affichent uniquement si vous avez sélectionné une couche thématique de bâtiments ou de végétation.
+              Deux types de graphiques sont proposés : un histogramme et un diagramme en anneau (donut).
+            </p>
+            <p style="margin-top:150px;">
+              Un second graphique est également disponible : un histogramme des couches sélectionnées selon les années, permettant d'observer l'évolution de la superficie sur l'ensemble de la zone d'étude.
+            </p>
+              <p style="margin-top:100px;">
+              Un graphique global s'ajoute en bas. Ce graphique affiche l'évolution des surfaces au fil des années pour les bâtiments et la végétation. Vous pouvez cocher ou décocher la légende en haut pour n'afficher que les bâtiments ou la végétation.
+            </p>
+            
+          </div>
+
+        </div>
+
+      </div>
+      <div class="aide_content">
+        <div class="aide_content2">
+          <img src="/img/aides/raccourci.png" alt="">
+          <div>
+            <p class="aide_title">Raccourcis</p>
+            <p style="margin-top: 50px;">
+              Les deux boutons apportent directement les couches thématiques sans passer par l’onglet “ couches”. Si vous voulez afficher directement les bâtiment sou la végétation.
+            </p>
+          </div>
+        </div>
+        <div class="aide_content2">
+          <img src="/img/aides/mesures-zoom.png" alt="">
+          <div>
+            <p class="aide_title">Mesures et Zooms</p>
+            <p style="margin-top: 30px;">
+              Outil de mesure permettant de calculer des distances ou des surfaces en fonction du tracé.
+            </p>
+            <p style="margin-top: 70px;">
+              Outil de zoom avant et arrière sur la carte.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="aide_content">
+        <div class="aide_content2">
+          <img src="/img/aides/affichage.png" alt="">
+          <div>
+            <h6 class="aide_title">Mode d'affichage</h6>
+            <p style="margin-top: 10px ;">
+              Le slider permet de comparer deux couches en faisant glisser un bandeau de gauche à droite.
+            </p>
+            <p style="margin-top: 200px;">
+              La loupe  facilite la comparaison locale. L'extérieur de la loupe correspond à la couche de gauche et l'intérieur à celle de droite.
+            </p>
+            <p style="margin-top: 150px;">
+              La carte synchrone permet d'afficher deux cartes au même endroit. Les deux cartes sont synchronisées lorsqu'on se déplace.
+            </p>
+          </div>
+        </div>
+        <div class="aide_content2" style="flex-direction: column;">
+          <p class="aide_title">Années</p>
+          <img style="max-width: 90%; height: auto;"  src="/img/aides/annees.png" alt="">
+          <div>
+            
+            <p style="margin-top: 20px;">
+              Pendant la comparaison, vous pouvez sélectionner deux dates différentes (à gauche et à droite), mais il est impossible de choisir une date à droite qui soit antérieure à celle de gauche, et inversement. La date sélectionnée s’affiche en rouge, et le graphique s’actualise en fonction de la date choisie.
+            </p>
+          </div>
+
+          <div style="margin-top: 100px; font-size: 22px;" >
+            Pour toute autre question, contactez <a href="https://mastergeonum.org/" target="_blank" ><strong>mastergeonum.org</strong></a>.
+          </div>
+          
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf"></script>
+  <script type="module" src="/src/index.js"></script>
+
+</body>
+</html>
